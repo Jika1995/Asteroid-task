@@ -1,10 +1,15 @@
 import Image from 'next/image'
 import React from 'react';
 import Arrow from '../../public/Arrow.png';
-import Asteroid from '../../public/Asteroid.png';
+import AsteroidImg from '../../public/Asteroid.png';
 import { IconAlertTriangleFilled } from '@tabler/icons-react'
+import { Asteroid } from '@/utils/types';
 
-const AsteroidItem = () => {
+export type Props = {
+    item: Asteroid
+}
+const AsteroidItem = ({ item }: Props) => {
+
     return (
         <div className='py-2'>
             <h1 className='text-2xl font-bold'>
@@ -15,7 +20,7 @@ const AsteroidItem = () => {
                     <p className='text-sm'>3 лунные орбиты</p>
                     <Image src={Arrow} alt={`itemId-arrow`} />
                 </div>
-                <Image src={Asteroid} alt={`itemId-asteroid`}
+                <Image src={AsteroidImg} alt={`itemId-asteroid`}
                 //  height={30}
                 />
                 <div>

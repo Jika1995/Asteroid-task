@@ -1,3 +1,4 @@
+import { useFetchAsteroids } from '@/services/fetchAsteroids';
 import { Anchor, Tabs } from '@mantine/core';
 import Image from 'next/image'
 import React, { useState } from 'react';
@@ -6,6 +7,9 @@ import AsteroidItem from './AsteroidItem';
 
 const AsteroidsList = () => {
     // const [activeTab, setActiveTab] = useState<string | null>('kilometers');
+    const [asteroids] = useFetchAsteroids();
+
+    console.log(asteroids);
 
     return (
         <div className='py-6 relative'>
@@ -23,9 +27,12 @@ const AsteroidsList = () => {
                 </div>
 
                 <div className='py-2'>
-                    <AsteroidItem />
-                    <AsteroidItem />
-
+                    {
+                        asteroids.map(item =>
+                        (
+                            <AsteroidItem item={item} key={item.id} />)
+                        )
+                    }
                 </div>
                 {/* <Tabs value={activeTab} onTabChange={setActiveTab} color='white'>
                     <Tabs.List>
