@@ -3,7 +3,7 @@ import React from 'react'
 const Header = () => {
     return (
         <div className='flex flex-col'>
-            <h1 className=' text-orange-600 text-xl font-extrabold'>
+            <h1 className=' text-orange-600 text-xl font-extrabold z-10'>
                 ARMAGEDDON 2023
             </h1>
             <p className='text-white text-xs z-10'>

@@ -6,26 +6,27 @@ import { IconAlertTriangleFilled } from '@tabler/icons-react'
 import { Asteroid } from '@/utils/types';
 
 export type Props = {
-    item: Asteroid
+    asteroid: Asteroid,
+    date: string
 }
-const AsteroidItem = ({ item }: Props) => {
+const AsteroidItem = ({ asteroid, date }: Props) => {
 
     return (
         <div className='py-2'>
             <h1 className='text-2xl font-bold'>
-                12 сент 2023
+                {date}
             </h1>
             <div className='flex gap-2 py-2'>
                 <div>
-                    <p className='text-sm'>3 лунные орбиты</p>
+                    <p className='text-sm'>{Math.round(+asteroid.close_approach_data[0].miss_distance.lunar)} лунных орбит</p>
                     <Image src={Arrow} alt={`itemId-arrow`} />
                 </div>
                 <Image src={AsteroidImg} alt={`itemId-asteroid`}
                 //  height={30}
                 />
                 <div>
-                    <p className='underline text-sm font-bold'>2021FQ</p>
-                    <p className='text-sm'>Ø 85 м</p>
+                    <p className='underline text-xs font-bold'>{asteroid.name.match(/\(([^)]+)\)/)?.[1] ?? ''}</p>
+                    <p className='text-sm'>Ø {Math.round(+asteroid.estimated_diameter.meters.estimated_diameter_max)}</p>
                 </div>
             </div>
             <div className='flex gap-4 items-center'>

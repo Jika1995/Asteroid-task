@@ -1,19 +1,33 @@
 import { useFetchAsteroids } from '@/services/fetchAsteroids';
+import { Asteroid } from '@/utils/types';
 import { Anchor, Tabs } from '@mantine/core';
 import Image from 'next/image'
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Earth from '../../public/Earth.png'
 import AsteroidItem from './AsteroidItem';
 
 const AsteroidsList = () => {
     // const [activeTab, setActiveTab] = useState<string | null>('kilometers');
-    const [asteroids] = useFetchAsteroids();
+    const start_date = new Date().toISOString().slice(0, 10);
+    // start_date.
+    console.log(start_date);
 
-    console.log(asteroids);
+    const [data] = useFetchAsteroids({ start_date }, { enabled: Boolean(start_date) });
+    const rawData = data?.pages[0].near_earth_objects
+
+    const [asteroids, setAsteroids] = useState<[string, Asteroid[]][]>([]);
+
+    useEffect(() => {
+        if (rawData) {
+            setAsteroids(Object.entries(rawData))
+        }
+    }, [rawData])
+
+    console.log(rawData);
 
     return (
         <div className='py-6 relative'>
-            <Image src={Earth} alt={'earth-png'} className='absolute right-64 top-0 py-6' />
+            <Image src={Earth} alt={'earth-png'} className='fixed top-0 py-6' style={{ right: '17rem' }} />
             <div className='pl-10'>
                 <h1 className='text-2xl font-bold'>Ближайшие подлеты астероидов</h1>
                 <div className='flex'>
@@ -28,9 +42,12 @@ const AsteroidsList = () => {
 
                 <div className='py-2'>
                     {
-                        asteroids.map(item =>
+                        asteroids?.map(item =>
                         (
-                            <AsteroidItem item={item} key={item.id} />)
+                            item[1].map(elem => (
+                                <AsteroidItem date={item[0]} key={elem.id} asteroid={elem} />
+                            ))
+                        )
                         )
                     }
                 </div>
