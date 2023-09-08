@@ -8,7 +8,7 @@ const CartModal = () => {
     const cartItems = useAppSelector((state) => state.cart.entities)
     console.log(cartItems);
 
-    if (Object.values(cartItems).length === 0) return <Title size='sm' align='center' color='white'>В вашей корзине еще нет заказов!</Title>
+    if (Object.values(cartItems).length === 0) return <Title size='sm' align='center' color='white' py={10}>В вашей корзине еще нет заказов!</Title>
 
     return (
 
