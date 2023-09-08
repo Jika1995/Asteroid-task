@@ -1,9 +1,8 @@
 import { useFetchAsteroids } from '@/services/fetchAsteroids';
 import { Asteroid } from '@/utils/types';
-import { Anchor, Tabs } from '@mantine/core';
-import Image from 'next/image'
+import { Anchor, Loader, Tabs } from '@mantine/core';
 import React, { useEffect, useState } from 'react';
-import Earth from '../../public/Earth.png'
+
 import AsteroidItem from './AsteroidItem';
 
 const AsteroidsList = () => {
@@ -12,7 +11,7 @@ const AsteroidsList = () => {
     // start_date.
     console.log(start_date);
 
-    const [data] = useFetchAsteroids({ start_date }, { enabled: Boolean(start_date) });
+    const [data, { isLoading }] = useFetchAsteroids({ start_date }, { enabled: Boolean(start_date) });
     const rawData = data?.pages[0].near_earth_objects
 
     const [asteroids, setAsteroids] = useState<[string, Asteroid[]][]>([]);
@@ -32,10 +31,10 @@ const AsteroidsList = () => {
 
     console.log(rawData);
 
+
     return (
-        <div className='py-6 relative'>
-            <Image src={Earth} alt={'earth-png'} className='fixed top-0 py-6' style={{ right: '17rem' }} />
-            <div className='pl-10'>
+        <div className=''>
+            <div className='pl-12 md:px-72'>
                 <h1 className='text-2xl font-bold'>Ближайшие подлеты астероидов</h1>
                 <div className='flex'>
                     <Anchor component="button" type="button" color='white' size='sm' >
@@ -48,6 +47,9 @@ const AsteroidsList = () => {
                 </div>
 
                 <div className='py-2'>
+                    {
+                        isLoading ?? <Loader />
+                    }
                     {
                         asteroids?.map(item =>
                         (
