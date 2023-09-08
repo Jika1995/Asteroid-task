@@ -19,7 +19,14 @@ const AsteroidsList = () => {
 
     useEffect(() => {
         if (rawData) {
-            setAsteroids(Object.entries(rawData))
+            setAsteroids(Object.entries(rawData).sort((a, b) => {
+                const dateA = new Date(a[0].replace(/(\d{4}) (\d{2}) (\d{2})/, '$1-$2-$3'));
+                const dateB = new Date(b[0].replace(/(\d{4}) (\d{2}) (\d{2})/, '$1-$2-$3'));
+
+                if (dateA < dateB) return -1;
+                if (dateA > dateB) return 1;
+                return 0;
+            }))
         }
     }, [rawData])
 

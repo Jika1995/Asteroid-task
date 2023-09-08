@@ -4,12 +4,29 @@ import Arrow from '../../public/Arrow.png';
 import AsteroidImg from '../../public/Asteroid.png';
 import { IconAlertTriangleFilled } from '@tabler/icons-react'
 import { Asteroid } from '@/utils/types';
+import { useDispatch } from 'react-redux';
+import { addToCart } from '@/store/slices/cart.slice';
+import { useIsInCart } from '@/store/hooks';
 
 export type Props = {
     asteroid: Asteroid,
     date: string
 }
 const AsteroidItem = ({ asteroid, date }: Props) => {
+
+    const isInCart = useIsInCart(asteroid.id)
+    const dispatch = useDispatch();
+
+    const handleAddToCart = () => {
+        dispatch(
+            addToCart(asteroid)
+        )
+
+        console.log(isInCart);
+
+    }
+
+
 
     return (
         <div className='py-2'>
@@ -30,8 +47,10 @@ const AsteroidItem = ({ asteroid, date }: Props) => {
                 </div>
             </div>
             <div className='flex gap-4 items-center'>
-                <button className='rounded-3xl bg-orange-500 bg-opacity-20 p-2 font-semibold text-xs text-orange-600'>
-                    ЗАКАЗАТЬ
+                <button className='rounded-3xl bg-orange-500 bg-opacity-20 p-2 font-semibold text-xs text-orange-600' onClick={handleAddToCart}>
+                    {
+                        isInCart ? "В Корзине" : "ЗАКАЗАТЬ"
+                    }
                 </button>
                 <p className='text-sm flex gap-2'>
                     <IconAlertTriangleFilled style={{ color: 'yellow' }} />
