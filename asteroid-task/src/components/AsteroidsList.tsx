@@ -8,13 +8,12 @@ import AsteroidItem from './AsteroidItem';
 const AsteroidsList = () => {
     // const [activeTab, setActiveTab] = useState<string | null>('kilometers');
     const start_date = new Date().toISOString().slice(0, 10);
-    // start_date.
-    console.log(start_date);
 
     const [data, { isLoading }] = useFetchAsteroids({ start_date }, { enabled: Boolean(start_date) });
     const rawData = data?.pages[0].near_earth_objects
 
     const [asteroids, setAsteroids] = useState<[string, Asteroid[]][]>([]);
+    const [isLunar, setIsLunar] = useState<boolean>(true)
 
     useEffect(() => {
         if (rawData) {
@@ -37,11 +36,11 @@ const AsteroidsList = () => {
             <div className='pl-12 md:px-72'>
                 <h1 className='text-2xl font-bold'>Ближайшие подлеты астероидов</h1>
                 <div className='flex'>
-                    <Anchor component="button" type="button" color='white' size='sm' >
+                    <Anchor component="button" type="button" color='white' size='sm' onClick={() => setIsLunar(false)} className={!isLunar ? 'underline' : ''}>
                         в километрах
                     </Anchor>
                     <span className='px-1'>|</span>
-                    <Anchor component="button" type="button" color='white' size='sm' >
+                    <Anchor component="button" type="button" color='white' size='sm' onClick={() => setIsLunar(true)} className={isLunar ? 'underline' : ''}>
                         в лунных орбитах
                     </Anchor>
                 </div>
@@ -54,7 +53,7 @@ const AsteroidsList = () => {
                         asteroids?.map(item =>
                         (
                             item[1].map(elem => (
-                                <AsteroidItem date={item[0]} key={elem.id} asteroid={elem} />
+                                <AsteroidItem date={item[0]} key={elem.id} asteroid={elem} isLunar={isLunar} />
                             ))
                         )
                         )

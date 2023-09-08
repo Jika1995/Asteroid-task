@@ -8,23 +8,53 @@ import { useDispatch } from 'react-redux';
 import { addToCart } from '@/store/slices/cart.slice';
 import { useIsInCart } from '@/store/hooks';
 import Link from 'next/link';
-import { spawn } from 'child_process';
+import dayjs from 'dayjs';
 
 export type Props = {
     asteroid: Asteroid,
-    date: string
+    date: string,
+    isLunar: boolean
 }
-const AsteroidItem = ({ asteroid, date }: Props) => {
+const AsteroidItem = ({ asteroid, date, isLunar }: Props) => {
+    require('dayjs/locale/ru')
 
     const isInCart = useIsInCart(asteroid.id);
     const isBig = +asteroid.estimated_diameter.meters.estimated_diameter_min > 100
     const dispatch = useDispatch();
+    date = dayjs(date).locale('ru').format('D MMMM YYYY');
+    const lunar = Math.round(+asteroid.close_approach_data[0].miss_distance.lunar)
 
     const handleAddToCart = () => {
         dispatch(
             addToCart(asteroid)
         )
     }
+
+    // const morph = (int: number, array: string[]) => {
+    //     return (array = array || ['лунная орбита', 'лунной орбиты', 'лунных орбит']) && array[(int % 100 > 4 && int % 100 < 20) ? 2 : [2, 0, 1, 1, 1, 2][(int % 10 < 5) ? int % 10 : 5]];
+    // }
+
+    const morph = (int: number, array: string[] = ['лунная орбита', 'лунные орбиты', 'лунных орбит']): string => {
+        const singularForm = array[0];
+        const genitiveSingularForm = array[1];
+        const pluralForm = array[2];
+
+        if (int % 100 > 4 && int % 100 < 20) {
+            return pluralForm;
+        }
+
+        const lastDigit = int % 10;
+
+        if (lastDigit === 1) {
+            return singularForm;
+        }
+
+        if (lastDigit >= 2 && lastDigit <= 4) {
+            return genitiveSingularForm
+        }
+
+        return pluralForm;
+    };
 
     return (
         <div className='py-2'>
@@ -34,7 +64,12 @@ const AsteroidItem = ({ asteroid, date }: Props) => {
                 </h1>
                 <div className='flex gap-2 py-2'>
                     <div>
-                        <p className='text-sm'>{Math.round(+asteroid.close_approach_data[0].miss_distance.lunar)} лунных орбит</p>
+                        {
+                            isLunar ?
+                                <p className='text-sm'>{lunar} {morph(lunar)} </p>
+                                :
+                                <p className='text-sm'>{Math.round(+asteroid.close_approach_data[0].miss_distance.kilometers)} км</p>
+                        }
                         <Image src={Arrow} alt={`itemId-arrow`} />
                     </div>
                     <Image src={AsteroidImg} alt={`itemId-asteroid`}
